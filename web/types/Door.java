@@ -1,9 +1,9 @@
 package web.types;
 
 import org.powerbot.game.api.methods.node.Locations;
+import org.powerbot.game.api.util.Filter;
 import org.powerbot.game.api.wrappers.Tile;
 import org.powerbot.game.api.wrappers.node.Location;
-import web.resources.filters.IDFilter;
 import web.types.Base.WebAction;
 import web.walking.RSWalking;
 
@@ -33,7 +33,13 @@ public abstract class Door extends WebAction{
 	public boolean doActionAtoB() {
 		if(RSWalking.WalkingUtil.canReach(super.getB(),false))
 			return RSWalking.walkToTile(super.getB());
-		Location door = Locations.getNearest(new IDFilter(new int[]{id}));
+		Location door = Locations.getNearest(new Filter<Location>() {
+
+			@Override
+			public boolean accept(final Location l) {
+				return l.getId() == id;
+			}
+		});
 		if (door != null) {
 			attempts++;
 			if (!door.isOnScreen()) {
@@ -58,7 +64,13 @@ public abstract class Door extends WebAction{
 	public boolean doActionBtoA() {
 		if(RSWalking.WalkingUtil.canReach(super.getA(),false))
 			return RSWalking.walkToTile(super.getA());
-		Location door = Locations.getNearest(new IDFilter(new int[]{id}));
+		Location door = Locations.getNearest(new Filter<Location>() {
+
+			@Override
+			public boolean accept(final Location l) {
+				return l.getId() == id;
+			}
+		});
 		if (door != null) {
 			attempts++;
 			if (!door.isOnScreen()) {

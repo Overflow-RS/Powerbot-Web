@@ -4,9 +4,9 @@ import org.powerbot.game.api.methods.Calculations;
 import org.powerbot.game.api.methods.interactive.Players;
 import org.powerbot.game.api.methods.node.Locations;
 import org.powerbot.game.api.methods.tab.Skills;
+import org.powerbot.game.api.util.Filter;
 import org.powerbot.game.api.wrappers.Tile;
 import org.powerbot.game.api.wrappers.node.Location;
-import web.resources.filters.IDFilter;
 import web.types.Base.WebAction;
 
 /**
@@ -53,7 +53,13 @@ public class AgilityShortcut extends WebAction {
 
 	@Override
 	public boolean doActionAtoB() {
-		Location shortcut = Locations.getNearest(new IDFilter(new int[]{idA}));
+		Location shortcut = Locations.getNearest(new Filter<Location>() {
+
+			@Override
+			public boolean accept(final Location l) {
+				return l.getId() == idA;
+			}
+		});
 		if (shortcut != null) {
 			attempts++;
 			if (!shortcut.isOnScreen()) {
@@ -76,7 +82,13 @@ public class AgilityShortcut extends WebAction {
 
 	@Override
 	public boolean doActionBtoA() {
-		Location shortcut = Locations.getNearest(new IDFilter(new int[]{idB}));
+		Location shortcut = Locations.getNearest(new Filter<Location>() {
+
+			@Override
+			public boolean accept(final Location l) {
+				return l.getId() == idB;
+			}
+		});
 		if (shortcut != null) {
 			attempts++;
 			if (!shortcut.isOnScreen()) {

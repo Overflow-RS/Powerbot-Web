@@ -2,9 +2,10 @@ package web.types;
 
 import org.powerbot.game.api.methods.interactive.Players;
 import org.powerbot.game.api.methods.node.Locations;
+import org.powerbot.game.api.util.Filter;
+import org.powerbot.game.api.util.Time;
 import org.powerbot.game.api.wrappers.Tile;
 import org.powerbot.game.api.wrappers.node.Location;
-import web.resources.filters.IDFilter;
 import web.types.Base.WebAction;
 import web.walking.RSWalking;
 
@@ -40,7 +41,13 @@ public abstract class Stairs extends WebAction {
 
 	@Override
 	public boolean doActionAtoB() {
-		Location shortcut = Locations.getNearest(new IDFilter(new int[]{idA}));
+		Location shortcut = Locations.getNearest(new Filter<Location>() {
+
+			@Override
+			public boolean accept(final Location l) {
+				return l.getId() == idA;
+			}
+		});
 		if (shortcut != null) {
 			attempts++;
 			if (!shortcut.isOnScreen()) {
@@ -48,8 +55,15 @@ public abstract class Stairs extends WebAction {
 			}
 			if (shortcut.isOnScreen()) {
 				shortcut.interact(actionA);
+				for (int i = 0; i < 10; i++) {
+					if (Players.getLocal().getPosition().getPlane() == planeB) {
+						break;
+					}
+					Time.sleep(300);
+				}
+
 			}
-			if (Players.getLocal().getPosition().getX()==planeB) {
+			if (Players.getLocal().getPosition().getPlane() == planeB) {
 				attempts = 0;
 				return true;
 			}
@@ -63,16 +77,29 @@ public abstract class Stairs extends WebAction {
 
 	@Override
 	public boolean doActionBtoA() {
-		Location shortcut = Locations.getNearest(new IDFilter(new int[]{idB}));
+		Location shortcut = Locations.getNearest(new Filter<Location>() {
+
+			@Override
+			public boolean accept(final Location l) {
+				return l.getId() == idB;
+			}
+		});
 		if (shortcut != null) {
 			attempts++;
 			if (!shortcut.isOnScreen()) {
-			 	RSWalking.walkToTile(super.getB());
+				RSWalking.walkToTile(super.getB());
 			}
 			if (shortcut.isOnScreen()) {
 				shortcut.interact(actionB);
+				for (int i = 0; i < 10; i++) {
+					if (Players.getLocal().getPosition().getPlane() == planeA) {
+						break;
+					}
+					Time.sleep(300);
+				}
+
 			}
-			if (Players.getLocal().getPosition().getY()==planeA) {
+			if (Players.getLocal().getPosition().getPlane() == planeA) {
 				attempts = 0;
 				return true;
 			}

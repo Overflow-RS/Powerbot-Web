@@ -4,8 +4,8 @@ import org.powerbot.game.api.methods.Calculations;
 import org.powerbot.game.api.methods.interactive.Players;
 import org.powerbot.game.api.wrappers.Tile;
 import web.data.Banks;
+import web.data.FTPActions;
 import web.data.FTPLines;
-import web.data.Lumbridge;
 import web.resources.banking.BANK_TYPE;
 import web.resources.banking.WebBank;
 import web.resources.pathfinding.*;
@@ -36,10 +36,10 @@ public class Web {
 	}
 
 	private void buildWeb() {
-		for (WebComponent c : FTPLines.components) {
+		for (WebComponent c : FTPLines.componentArray) {
 			updateWeb(c);
 		}
-		for(WebComponent c: Lumbridge.LUMBRIDGE_COMPS){
+		for (WebComponent c : FTPActions.LUMBRIDGE_COMPS) {
 			updateWeb(c);
 		}
 	}
@@ -140,7 +140,6 @@ public class Web {
 				}
 			}
 		}
-		System.out.println("Failed to find path");
 		return null;
 	}
 
@@ -192,9 +191,10 @@ public class Web {
 		return path;
 	}
 
-	public WebPath getNearestBankPath() {
+	public WebBank getNearestBank() {
 		WebPath closest = null;
 		double dist = -1;
+		WebBank b = null;
 		Tile myTile = Players.getLocal().getPosition();
 		for (WebBank bank : Banks.bankArray) {
 			if (bank.getType().equals(BANK_TYPE.DEPOSIT_BOX)) {
@@ -207,13 +207,63 @@ public class Web {
 					if (closest == null) {
 						closest = temp;
 						dist = tempDist;
+						b = bank;
 					} else if (tempDist < dist) {
 						closest = temp;
 						dist = tempDist;
+						b = bank;
+					}
+				}
+			}
+		}
+		return b;
+	}
+
+	public WebPath getNearestBankPath() {
+		WebPath closest = null;
+		double dist = -1;
+		WebBank b = null;
+		Tile myTile = Players.getLocal().getPosition();
+		for (WebBank bank : Banks.bankArray) {
+			if (bank.getType().equals(BANK_TYPE.DEPOSIT_BOX)) {
+				continue;
+			}
+			if (bank.canAccess()) {
+				WebPath temp = findPath(myTile, bank.getTile());
+				if (temp != null) {
+					double tempDist = temp.getTotalWeight();
+					if (closest == null) {
+						closest = temp;
+						dist = tempDist;
+						b = bank;
+					} else if (tempDist < dist) {
+						closest = temp;
+						dist = tempDist;
+						b = bank;
 					}
 				}
 			}
 		}
 		return closest;
+	}
+
+	public WebPath getWebPathToBank(WebBank bank) {
+		return findPath(Players.getLocal().getPosition(), bank.getTile());
+	}
+
+	public boolean walkToBank() {
+		return walkToBank(getNearestBank());
+	}
+
+	public boolean walkToBank(WebBank bank) {
+		if (Calculations.distance(Players.getLocal().getPosition(), bank.getTile()) < 10) {
+			return true;
+		}
+		WebPath path = getWebPathToBank(bank);
+		if (path != null) {
+			path.traverseWebPath();
+			return Calculations.distance(Players.getLocal().getPosition(), bank.getTile()) < 10;
+		}
+		return false;
 	}
 }
