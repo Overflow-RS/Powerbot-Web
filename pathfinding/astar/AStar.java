@@ -7,6 +7,7 @@ import pathfinding.astar.wrappers.NodePath;
 
 import java.util.HashSet;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 /**
  * Author: Tom
@@ -17,7 +18,7 @@ public class AStar {
 
 	public static NodePath findPath(Graph graph, Node start, Node end) {
 		PriorityQueue<Node> open = new PriorityQueue<Node>();
-		HashSet<Node> closed = new HashSet<Node>();
+		Set<Node> closed = new HashSet<Node>();
 		graph.resetNodes(end);
 		open.add(start);
 		while (open.size() > 0) {

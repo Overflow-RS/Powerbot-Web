@@ -22,11 +22,14 @@ import pathfinding.web.components.actions.WebAction;
 
 public class LodestoneAction extends WebAction {
 
-	public static final int LODESTONE_INTERFACE = 1092;
-	public static final int TELEPORT_ID         = 16385;
+	public static boolean canUse = true;
+	public static double lodestoneCost = 50;
+
+	private static final int LODESTONE_INTERFACE = 1092;
+	private static final int TELEPORT_ID         = 16385;
 	private final int CHILD_ID;
 
-	public static Widget getMainInterface() {
+	private static Widget getMainInterface() {
 		return Widgets.get(LODESTONE_INTERFACE);
 	}
 
@@ -36,12 +39,12 @@ public class LodestoneAction extends WebAction {
 	}
 
 	@Override
-	public boolean canDoAction() {
-		return true;
+	public final boolean canDoAction() {
+		return canUse;
 	}
 
 	@Override
-	public boolean doAction() {
+	public final boolean doAction() {
 		ActiveScript script = Context.get().getActiveScript();
 		int count = 0;
 		Tile current = Players.getLocal().getLocation();
@@ -69,10 +72,10 @@ public class LodestoneAction extends WebAction {
 
 	@Override
 	public double getCost() {
-		return 50;
+		return lodestoneCost;
 	}
 
-	public static boolean openLodestoneInterface() {
+	private static boolean openLodestoneInterface() {
 		if (!Tabs.MAGIC.isOpen()) {
 			Tabs.MAGIC.open();
 		}
@@ -86,7 +89,7 @@ public class LodestoneAction extends WebAction {
 		return sleepUntil(interfaceCondition, 5000);
 	}
 
-	public static boolean sleepUntil(Condition condition, long timeOut) {
+	private static boolean sleepUntil(Condition condition, long timeOut) {
 		Timer failsafe = new Timer(timeOut);
 		while (failsafe.isRunning()) {
 			if (condition.conditionMet()) {
@@ -97,7 +100,7 @@ public class LodestoneAction extends WebAction {
 		return condition.conditionMet();
 	}
 
-	public static boolean sleepUntil(Condition condition, Condition breakCondition, long timeOut) {
+	private static boolean sleepUntil(Condition condition, Condition breakCondition, long timeOut) {
 		Timer failsafe = new Timer(timeOut);
 		while (failsafe.isRunning()) {
 			if (breakCondition.conditionMet()) {
@@ -111,7 +114,7 @@ public class LodestoneAction extends WebAction {
 		return condition.conditionMet();
 	}
 
-	public static Condition interfaceCondition = new Condition() {
+	private static Condition interfaceCondition = new Condition() {
 
 		@Override
 		public boolean conditionMet() {
@@ -120,7 +123,7 @@ public class LodestoneAction extends WebAction {
 		}
 	};
 
-	public static class HasTeleported implements Condition {
+	private static class HasTeleported implements Condition {
 
 		Tile current = null;
 
@@ -134,7 +137,7 @@ public class LodestoneAction extends WebAction {
 		}
 	};
 
-	public static class TeleportBreak implements Condition {
+	private static class TeleportBreak implements Condition {
 
 		int i = 0;
 

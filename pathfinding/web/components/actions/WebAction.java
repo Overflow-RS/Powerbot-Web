@@ -43,12 +43,12 @@ public abstract class WebAction {
 	}
 
 	public boolean clickSceneEntity(SceneObject io, String action, String name) {
-		Timer failsafe = new Timer(10000);
+		Timer failSafe = new Timer(10000);
 		ActiveScript script = Context.get().getActiveScript();
 		if (script == null) {
 			return false;
 		}
-		while (script.isRunning() && failsafe.isRunning()) {
+		while (script.isRunning() && failSafe.isRunning()) {
 			if (io.isOnScreen()) {
 				if (io.interact(action, name)) {
 					for (int i = 0; i < 10; i++) {
@@ -61,7 +61,7 @@ public abstract class WebAction {
 				}
 			} else {
 				if (Players.getLocal().isMoving()) {
-					Time.sleep(300, 500);
+					Time.sleep(100, 300);
 				} else {
 					Walking.walk(io);
 					for (int i = 0; i < 10; i++) {

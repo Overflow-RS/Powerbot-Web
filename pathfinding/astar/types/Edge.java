@@ -10,7 +10,7 @@ public abstract class Edge {
 	private final Node source;
 	private final Node target;
 
-	protected Edge(final Node source, final Node target) {
+	public Edge(final Node source, final Node target) {
 		this.source = source;
 		this.target = target;
 	}
@@ -18,11 +18,11 @@ public abstract class Edge {
 	public abstract boolean canUse();
 	public abstract double getCost();
 
-	public Node getSource() {
+	public final Node getSource() {
 		return source;
 	}
 
-	public Node getTarget() {
+	public final Node getTarget() {
 		return target;
 	}
 

@@ -10,7 +10,7 @@ import java.util.LinkedList;
 public abstract class Node implements Comparable<Node> {
 
 	private final Graph container;
-	private LinkedList<Edge> edges = new LinkedList<Edge>();
+	private final LinkedList<Edge> edges = new LinkedList<Edge>();
 
 	private Node parent;
 
@@ -20,15 +20,15 @@ public abstract class Node implements Comparable<Node> {
 		this.container = container;
 	}
 
-	public Graph getContainer() {
+	public final Graph getContainer() {
 		return container;
 	}
 
-	public LinkedList<Edge> getEdges() {
+	public final LinkedList<Edge> getEdges() {
 		return edges;
 	}
 
-	public Edge getEdge(Node node) {
+	public final Edge getEdge(final Node node) {
 		for (Edge e : edges) {
 			if (e.getTarget().equals(node)) {
 				return e;
@@ -37,43 +37,43 @@ public abstract class Node implements Comparable<Node> {
 		return null;
 	}
 
-	public void addEdge(Edge e) {
+	public final void addEdge(final Edge e) {
 		edges.add(e);
 	}
 
-	public void reset(Node target) {
+	public final void reset(final Node target) {
 		heuristicCost = container.getHeuristic().getCost(this, target);
 		parent = null;
 	}
 
-	public double getCurrentCost() {
+	public final double getCurrentCost() {
 		return parent == null ? 0 : parent.getCurrentCost();
 	}
 
-	public double getHeuristicCost() {
+	public final double getHeuristicCost() {
 		return heuristicCost;
 	}
 
-	public double getCost() {
+	public final double getCost() {
 		return getHeuristicCost() + getCurrentCost();
 	}
 
-	public Node getParent() {
+	public final Node getParent() {
 		return parent;
 	}
 
-	public void setParent(final Edge edge) {
+	public final void setParent(final Edge edge) {
 		this.parent = edge.getSource();
 	}
 
 	@Override
-	public int compareTo(final Node o) {
+	public final int compareTo(final Node o) {
 		double dist = getCost() - o.getCost();
 		return dist == 0 ? 0 : dist < 0 ? -1 : 1;
 	}
 
 	@Override
-	public abstract boolean equals(Object o);
+	public abstract boolean equals(final Object o);
 
 
 }

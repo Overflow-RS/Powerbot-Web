@@ -13,35 +13,34 @@ import java.util.ArrayList;
 public abstract class Graph {
 
 	private final ActiveScript script;
-	private final String name;
+	private final String       name;
 
-	private boolean      debugWeb = false;
+	private boolean debugWeb = false;
 
-	public Graph(ActiveScript script, String name) {
+	public Graph(final ActiveScript script, final String name) {
 		this.script = script;
 		this.name = name;
 	}
 
-	protected ArrayList<Node> nodes = new ArrayList<Node>();
+	private final ArrayList<Node> nodes = new ArrayList<Node>();
 
-	protected Heuristic heuristic;
+	private Heuristic heuristic;
 
-	public Heuristic getHeuristic() {
-
+	public final Heuristic getHeuristic() {
 		return heuristic;
 	}
 
-	public boolean isDebugOn() {
+	public final boolean isDebugOn() {
 		return debugWeb;
 	}
 
-	public void setDebug(final boolean debugWeb) {
+	public final void setDebug(final boolean debugWeb) {
 		this.debugWeb = debugWeb;
 	}
 
-	public void debugMessage(String string) {
+	public final void debugMessage(final String string) {
 		if (debugWeb) {
-			StringBuilder message = new StringBuilder("["+name+"] ");
+			StringBuilder message = new StringBuilder("[" + name + "] ");
 			message.append(string);
 			if (script != null) {
 				script.log.info(message.toString());
@@ -51,19 +50,19 @@ public abstract class Graph {
 		}
 	}
 
-	public void addNode(Node node) {
+	public final void addNode(final Node node) {
 		nodes.add(node);
 	}
 
-	public void setHeuristic(Heuristic h) {
+	public final void setHeuristic(Heuristic h) {
 		this.heuristic = h;
 	}
 
-	public ArrayList<Node> getNodes() {
+	public final ArrayList<Node> getNodes() {
 		return nodes;
 	}
 
-	public void resetNodes(Node target) {
+	public final void resetNodes(final Node target) {
 		for (Node n : nodes) {
 			n.reset(target);
 		}

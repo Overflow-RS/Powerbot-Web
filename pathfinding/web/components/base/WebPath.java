@@ -21,6 +21,7 @@ import java.util.LinkedList;
 public class WebPath<T extends WebEdge> extends LinkedList<T> {
 
 	public final Tile endTile;
+	public String status = "";
 
 	public WebPath(final Tile endTile) {
 		this.endTile = endTile;
@@ -30,6 +31,7 @@ public class WebPath<T extends WebEdge> extends LinkedList<T> {
 		Iterator<T> a = this.iterator();
 		while (a.hasNext()) {
 			T next = a.next();
+			status = next.toString();
 			LocalPath p = Walking.findPath(endTile);
 			if (p != null && p.validate()) {
 				break;
@@ -58,7 +60,8 @@ public class WebPath<T extends WebEdge> extends LinkedList<T> {
 		}
 		LocalPath p = Walking.findPath(target);
 		while (script.isRunning() && failSafe.isRunning()) {
-			if (!Players.getLocal().isMoving() || (Calculations.distanceTo(Walking.getDestination()) < 8 && Calculations.distance(Walking.getDestination(),target) > 3)) {
+			if (!Players.getLocal().isMoving() || (Calculations.distanceTo(Walking.getDestination()) < 8 && Calculations.distance(Walking.getDestination(),
+			                                                                                                                      target) > 3)) {
 				if (p == null) {
 					Walking.walk(target);
 					p = Walking.findPath(target);
@@ -75,4 +78,7 @@ public class WebPath<T extends WebEdge> extends LinkedList<T> {
 		return false;
 	}
 
+	public String getStatus() {
+		return status;
+	}
 }

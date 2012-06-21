@@ -19,7 +19,6 @@ public class WebNode extends Node {
 		this.tile = a;
 	}
 
-
 	public Tile getTile() {
 		return tile;
 	}
@@ -35,6 +34,6 @@ public class WebNode extends Node {
 
 	@Override
 	public String toString(){
-		return tile.toString();
+		return "("+tile.getX()+","+tile.getY()+","+tile.getPlane()+")";
 	}
 }
